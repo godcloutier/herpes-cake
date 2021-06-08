@@ -1,0 +1,46 @@
+{
+	"compiler": {
+		"version": "0.6.12+commit.27d51765"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [],
+		"devdoc": {
+			"details": "Collection of functions related to the address type",
+			"kind": "dev",
+			"methods": {},
+			"version": 1
+		},
+		"userdoc": {
+			"kind": "user",
+			"methods": {},
+			"version": 1
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"Herpes.sol": "Address"
+		},
+		"evmVersion": "istanbul",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"enabled": true,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"Herpes.sol": {
+			"keccak256": "0x7b66be37f1cb8e3b5f747f4013f5de76152fe56b8abd037e453a11e72ee05e64",
+			"license": "UNLICENSED",
+			"urls": [
+				"bzz-raw://28eb7b1c81300cec29454e436c8c57b39a19fd41252238e1497ec9700bfbc5ac",
+				"dweb:/ipfs/QmRA4ypmPTiYzevVdt3VHcybWSvgkwyonv9hvy6sqxF2gp"
+			]
+		}
+	},
+	"version": 1
+}

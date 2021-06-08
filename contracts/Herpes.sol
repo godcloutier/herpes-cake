@@ -12,7 +12,6 @@
 |__/  |__/|________/|__/  |__/|__/      |________/ \______/ 
 
 
-
                       ``    /h/
                      sds    :y`
              .`      .s:    s:
@@ -41,7 +40,6 @@
 HERPES - the token that spreads like a virus!
 
 Features:
-|- Upgradable contract
 |- 10% tax per transaction:
    |- 2% is auto-added to locked liquidity
    |- 8% is redistributed to holders
@@ -752,7 +750,7 @@ contract Herpes is Context, IERC20, Ownable {
     uint256 private _tFeeTotal;
 
     string private _name = "Herpes";
-    string private _symbol = "Herpes";
+    string private _symbol = "HERPES";
     uint8 private _decimals = 9;
     
     uint256 public _taxFee = 8;
@@ -761,14 +759,14 @@ contract Herpes is Context, IERC20, Ownable {
     uint256 public _liquidityFee = 2;
     uint256 private _previousLiquidityFee = _liquidityFee;
 
-    IUniswapV2Router02 public immutable uniswapV2Router;
-    address public immutable uniswapV2Pair;
+    IUniswapV2Router02 public uniswapV2Router;
+    address public uniswapV2Pair;
     
     bool inSwapAndLiquify;
     bool public swapAndLiquifyEnabled = true;
     
-    uint256 public _maxTxAmount = 5000000 * 10**6 * 10**9;
-    uint256 private numTokensSellToAddToLiquidity = 500000 * 10**6 * 10**9;
+    uint256 public _maxTxAmount = _tTotal;
+    uint256 private numTokensSellToAddToLiquidity = _tTotal;
     
     event MinTokensBeforeSwapUpdated(uint256 minTokensBeforeSwap);
     event SwapAndLiquifyEnabledUpdated(bool enabled);
@@ -787,8 +785,11 @@ contract Herpes is Context, IERC20, Ownable {
     constructor () public {
         _rOwned[_msgSender()] = _rTotal;
         
-        IUniswapV2Router02 _uniswapV2Router = IUniswapV2Router02(0xD99D1c33F9fC3444f8101754aBC46c52416550D1);
-         // Create a uniswap pair for this new token
+        // @ES: PancakeSwap V2 Router BSC mainnet address: 0x10ED43C718714eb63d5aA57B78B54704E256024E
+        // @ES: PancakeSwap V2 Router BSC testnet address: 0xD99D1c33F9fC3444f8101754aBC46c52416550D1
+        IUniswapV2Router02 _uniswapV2Router = IUniswapV2Router02(0x10ED43C718714eb63d5aA57B78B54704E256024E);
+        
+        // Create a uniswap pair for this new token
         uniswapV2Pair = IUniswapV2Factory(_uniswapV2Router.factory())
             .createPair(address(this), _uniswapV2Router.WETH());
 
@@ -799,7 +800,25 @@ contract Herpes is Context, IERC20, Ownable {
         _isExcludedFromFee[owner()] = true;
         _isExcludedFromFee[address(this)] = true;
         
+        // @ES: Exclude owner and specific burn wallets from the reward.
+        excludeFromReward(owner());
+        excludeFromReward(0x000000000000000000000000000000000000dEaD);
+        excludeFromReward(0x0000000000000000000000000000000000000001);
+        
         emit Transfer(address(0), _msgSender(), _tTotal);
+    }
+    
+    /*
+     * A method allow the contract owner to change the Uniswap router address.
+     * 
+     * For use in the event of a new major version release of Uniswap.
+     *
+     * This patch is credited to user FreezyEx from forum.openzeppelin.com
+     */
+    function setRouterAddress(address newRouter) public onlyOwner() {
+        IUniswapV2Router02 _newPancakeRouter = IUniswapV2Router02(newRouter);
+        uniswapV2Pair = IUniswapV2Factory(_newPancakeRouter.factory()).createPair(address(this), _newPancakeRouter.WETH());
+        uniswapV2Router = _newPancakeRouter;
     }
 
     function name() public view returns (string memory) {
@@ -1191,8 +1210,4 @@ contract Herpes is Context, IERC20, Ownable {
         _reflectFee(rFee, tFee);
         emit Transfer(sender, recipient, tTransferAmount);
     }
-
-
-    
-
 }
