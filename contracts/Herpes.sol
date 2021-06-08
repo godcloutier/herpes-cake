@@ -960,6 +960,12 @@ contract Herpes is Context, IERC20, Ownable {
             10**2
         );
     }
+    
+    function setMaxTxPermille(uint256 maxTxPermille) external onlyOwner() {
+        _maxTxAmount = _tTotal.mul(maxTxPermille).div(
+            10**3
+        );
+    }
 
     function setSwapAndLiquifyEnabled(bool _enabled) public onlyOwner {
         swapAndLiquifyEnabled = _enabled;
