@@ -1,0 +1,7 @@
+Thanos-in-the-sunlight Purple:
+
+Normal 9843D5
+Dark 330066
+Light BE73FF
+-------------
+Yellow FFE600
